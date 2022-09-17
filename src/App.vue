@@ -1,19 +1,26 @@
 <template>
   <div id="app">
+    <img alt="Vue logo" src="./assets/logo.png" />
     <div class="display">
-      <input @focus="focused" v-model="operand1" />
-      {{ operator }}
-      <input @focus="focused_2" v-model="operand2" />
+      <input placeholder="0" v-model.number="operand1" />
+      <input placeholder="0" v-model.number="operand2" />
       <button @click="getResult">=</button>
       {{ result }}
     </div>
+    <div v-if="error" class="error">Ошибка! {{ error }}</div>
     <div class="keyboard">
-      <button @click="operator = '+'">+</button>
-      <button @click="operator = '-'">-</button>
+      <button
+        v-for="(operator, index) in operators"
+        :key="index"
+        class="keyboard-btn"
+      >
+        {{ operator }}
+      </button>
+      <!-- <button @click="operator = '-'">-</button>
       <button @click="operator = '/'">/</button>
       <button @click="operator = '*'">*</button>
       <button @click="operator = '^'">^</button>
-      <button @click="operator = '%'">%</button>
+      <button @click="operator = '%'">%</button> -->
     </div>
 
     <!-- <img alt="Vue logo" src="./assets/logo.png" />
@@ -32,33 +39,37 @@ export default {
   name: "Calculator",
   data() {
     return {
-      operand1: "0",
-      operand2: "0",
-      operator: "+",
+      operand1: "",
+      operand2: "",
+      operators: ["+", "-", "*", "/"],
       result: 0,
+      error: "",
     };
   },
 
   methods: {
     getResult() {
-      switch (this.operator) {
+      switch (this.operators) {
         case "+":
-          this.result = +this.operand1 + +this.operand2;
+          this.result = this.operand1 + this.operand2;
           break;
         case "-":
-          this.result = +this.operand1 - +this.operand2;
+          this.result = this.operand1 - this.operand2;
           break;
         case "/":
-          this.result = +this.operand1 / +this.operand2;
+          if (operand2 === 0) {
+            this.error = "Делить на 0 нельзя!";
+          }
+          this.result = this.operand1 / this.operand2;
           break;
         case "*":
-          this.result = +this.operand1 * +this.operand2;
+          this.result = this.operand1 * this.operand2;
           break;
         case "^":
           this.result = Math.pow(+this.operand1, +this.operand2);
           break;
         case "%":
-          this.result = +this.operand1 % +this.operand2;
+          this.result = this.operand1 % this.operand2;
           break;
 
         default:
@@ -66,23 +77,21 @@ export default {
           break;
       }
     },
-    focused() {
-      this.operand1 = "";
-    },
-    focused_2() {
-      this.operand2 = "";
-    },
   },
 };
 </script>
 
 <style lang="scss">
-// #app {
-//   font-family: Avenir, Helvetica, Arial, sans-serif;
-//   -webkit-font-smoothing: antialiased;
-//   -moz-osx-font-smoothing: grayscale;
-//   text-align: center;
-//   color: #2c3e50;
-//   margin-top: 60px;
-// }
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+  // width: 1140px;
+}
+.keyboard-btn {
+  margin: 10px;
+}
 </style>
